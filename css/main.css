@@ -1,0 +1,64 @@
+body {
+    font-family: Avenir;
+    padding-top: 5%;
+}
+
+#container {
+  width: 50%;
+  min-width: 600px;
+  min-height: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2%;
+  border: thin dotted #1B6464;
+  border-radius: 5px;
+  display: table;
+}
+
+a.special:link, a.special:visited {
+  background-color: #58B572;
+  color: white;
+  text-decoration: none;
+  padding: 10px 30px;
+  font-size: large;
+  display: inline-block;
+  border-color: white;
+  border-radius: 5px;
+}
+
+a.special:hover, a.special:active {
+  background-color: #B5A058;
+}
+
+a:link, a:visited {
+  color: black;
+  padding: 10px 40px;
+  font-size: x-large;
+  text-decoration: none;
+  border: thin solid #1B6464;
+  border-radius: 5px;
+}
+
+a:hover, a:active {
+  color: #B5A058;
+}
+
+.centered {
+  text-align: center;
+}
+
+div.page {
+  vertical-align: middle;
+  display: none;
+}
+
+table.organizer {
+  min-height: 350px;
+  width: 100%;
+  font-size: x-large;
+  padding: 1%;
+}
+
+tr.top {
+  vertical-align: top;
+}

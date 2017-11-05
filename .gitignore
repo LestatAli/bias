@@ -1,0 +1,7 @@
+*.pbxuser
+*.perspectivev3
+project.xcworkspace
+xcuserdata
+.DS_Store
+ruwiktionary-*
+Raw/
