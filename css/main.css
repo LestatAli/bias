@@ -33,10 +33,11 @@ a.special:hover, a.special:active {
 a:link, a:visited {
   color: black;
   padding: 10px 40px;
-  font-size: x-large;
+  font-size: large;
   text-decoration: none;
   border: thin solid #1B6464;
   border-radius: 5px;
+  display: block;
 }
 
 a:hover, a:active {

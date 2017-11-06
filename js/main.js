@@ -1,18 +1,37 @@
 // Hides the element with the given ID
 // Shows the element with the next highest ID
 
-function advanceToNext(currentID) {
-  if (currentID !== parseInt(currentID, 10)) {
+var choices = [];
+
+function submitChoices(formID, inputID) {
+  var input = document.getElementById(inputID);
+  if (input != null) {
+    input.value = JSON.stringify(choices);
+  }
+
+  var form = document.getElementById(formID);
+  if (form != null) {
+    form.submit();
+  }
+}
+
+function recordChoiceAndAdvanceToNext(choiceID, currentPageID) {
+  choices.push(choiceID);
+  advanceToNext(currentPageID);
+}
+
+function advanceToNext(currentPageID) {
+  if (currentPageID !== parseInt(currentPageID, 10)) {
     throw "currentID is not an integer"
   }
 
-  var currentElement = document.getElementById(currentID);
+  var currentElement = document.getElementById(currentPageID);
   if (currentElement == null) {
     throw "no element with given ID";
   }
 
-  nextID = currentID + 1;
-  var nextElement = document.getElementById(nextID);
+  nextPageID = currentPageID + 1;
+  var nextElement = document.getElementById(nextPageID);
   if (nextElement == null) {
     throw "no element with incremented ID";
   }
