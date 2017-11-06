@@ -2,6 +2,19 @@
 // Shows the element with the next highest ID
 
 var choices = [];
+var currentPageID = 0;
+
+function handleKeyPress(event) {
+  // Handle either the "1" or "2" buttons.
+  // More can be added.
+  // TODO: limit to number of choices available on screen.
+  if (event.keyCode == 49) {
+    recordChoiceAndAdvanceToNext(0);
+  } else if (event.keyCode == 50) {
+    recordChoiceAndAdvanceToNext(1);
+  }
+}
+
 
 function submitChoices(formID, inputID) {
   var input = document.getElementById(inputID);
@@ -15,16 +28,14 @@ function submitChoices(formID, inputID) {
   }
 }
 
-function recordChoiceAndAdvanceToNext(choiceID, currentPageID) {
+
+function recordChoiceAndAdvanceToNext(choiceID) {
   choices.push(choiceID);
-  advanceToNext(currentPageID);
+  advanceToNext();
 }
 
-function advanceToNext(currentPageID) {
-  if (currentPageID !== parseInt(currentPageID, 10)) {
-    throw "currentID is not an integer"
-  }
 
+function advanceToNext() {
   var currentElement = document.getElementById(currentPageID);
   if (currentElement == null) {
     throw "no element with given ID";
@@ -38,6 +49,8 @@ function advanceToNext(currentPageID) {
 
   currentElement.style.display = "none";
   nextElement.style.display = "table-cell";
+
+  currentPageID = nextPageID;
 
   var audios = nextElement.getElementsByTagName("audio");
   if (audios.length == 0) {

@@ -46,10 +46,10 @@ class MainHandler(webapp2.RequestHandler):
             <br />\
             %s\
           <audio>\
-            <source src=\"/sounds/test.mp3\" type=\"audio/mpeg\" />\
+            <source src=\"/sounds/%s\" type=\"audio/mpeg\" />\
             Your browser does not support modern audio.\
           </audio>\
-        </div>" % (index, choiceHTML);
+        </div>" % (index, choiceHTML, prompt.stimulus);
 
 
 class EndHandler(webapp2.RequestHandler):
