@@ -16,6 +16,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 class ResponseSet(ndb.Model):
     experiment_version =  ndb.IntegerProperty();
     responses = ndb.StringProperty();
+    response_times = ndb.StringProperty();
     percent_correct = ndb.FloatProperty();
 
 
@@ -63,7 +64,9 @@ class EndHandler(webapp2.RequestHandler):
     def post(self):
         prompts = ACTIVE_EXPERIMENT.prompts;
         choices_json = self.request.get("choices");
+        response_times_json = self.request.get("response_times");
         choices = json.loads(choices_json);
+
         if (len(choices) != len(prompts)):
             logging.error("Unequal number of choices vs prompts!");
             self.showErrorPage();
@@ -79,6 +82,7 @@ class EndHandler(webapp2.RequestHandler):
             response_set = ResponseSet();
             response_set.experiment_version = ACTIVE_EXPERIMENT.version;
             response_set.responses = choices_json;
+            response_set.response_times = response_times_json;
             response_set.percent_correct = correct_percent;
             response_set.put();
 

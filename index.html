@@ -28,7 +28,8 @@
     <br />
     <form id="sub_form" method="post" action="/end">
       <input type="hidden" id="choice_input" name="choices" value="" />
-      <a class="special" href="#" onclick="submitChoices('sub_form', 'choice_input')">Submit</a>
+      <input type="hidden" id="times_input" name="response_times" value="" />
+      <a class="special" href="#" onclick="submitChoicesAndTimes('sub_form', 'choice_input', 'times_input')">Submit</a>
     </form>
   </div>
 </div>

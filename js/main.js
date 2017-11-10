@@ -2,7 +2,9 @@
 // Shows the element with the next highest ID
 
 var choices = [];
+var responseTimes = [];
 var currentPageID = 0;
+  var currentResponseTime = 0;
 
 function handleKeyPress(event) {
   // Handle either the "1" or "2" buttons.
@@ -16,10 +18,15 @@ function handleKeyPress(event) {
 }
 
 
-function submitChoices(formID, inputID) {
-  var input = document.getElementById(inputID);
-  if (input != null) {
-    input.value = JSON.stringify(choices);
+function submitChoicesAndTimes(formID, choiceInputID, timeInputID) {
+  var choiceInput = document.getElementById(choiceInputID);
+  if (choiceInput != null) {
+    choiceInput.value = JSON.stringify(choices);
+  }
+
+  var timeInput = document.getElementById(timeInputID);
+  if (timeInput != null) {
+    timeInput.value = JSON.stringify(responseTimes);
   }
 
   var form = document.getElementById(formID);
@@ -30,7 +37,10 @@ function submitChoices(formID, inputID) {
 
 
 function recordChoiceAndAdvanceToNext(choiceID) {
+  // TODO: end timer
+  currentResponseTime = 100;
   choices.push(choiceID);
+  responseTimes.push(currentResponseTime);
   advanceToNext();
 }
 
@@ -52,6 +62,9 @@ function advanceToNext() {
 
   currentPageID = nextPageID;
 
+  // Clear the previous response time
+  currentResponseTime = 0;
+
   var audios = nextElement.getElementsByTagName("audio");
   if (audios.length == 0) {
     // no audio on page I guess
@@ -64,6 +77,8 @@ function advanceToNext() {
 
   var audio = audios[0];
   audio.play();
+
+  // TODO: begin timer
 
   // TODO: do not allow interaction until audio has finished playing
 }
