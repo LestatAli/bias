@@ -1,0 +1,46 @@
+<html>
+
+<head>
+  <title>Investigator Console</title>
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <script type="text/javascript">
+    function submitPasswordForm(typeID) {
+      passwordInput = document.getElementById('password_input');
+      if (passwordInput.value) {
+        typeInput = document.getElementById('file_type_input');
+        typeInput.value = typeID;
+        document.getElementById('login_form').submit();
+      } else {
+        alert("You must enter a password.");
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+<div id="container">
+
+<div class="page" style="display: table-cell">
+  <div class="centered">
+    <h1>Download Bulk Results</h1>
+    <br />
+    <form id="login_form" method="post" action="">
+      <p>Please enter your password:</p>
+      <input type="password" style="font-size: medium" id="password_input" name="password" value="" />
+      <input type="hidden" id="file_type_input" name="file_type" value="0" />
+      <br />
+      <br />
+      <p><a class="long" href="javascript:submitPasswordForm(0)">Download Words By Phoneme</a></p>
+      <p><a class="long" href="javascript:submitPasswordForm(1)">Download Sentences By Phoneme</a></p>
+      <p><a class="long" href="javascript:submitPasswordForm(2)">Download Words By Token</a></p>
+      <p><a class="long" href="javascript:submitPasswordForm(3)">Download Sentences By Token</a></p>
+    </form>
+  </div>
+</div>
+
+</div>
+
+</body>
+
+</html>

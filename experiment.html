@@ -1,0 +1,42 @@
+<html>
+
+<head>
+  <title>Experiment!</title>
+  <script src="/js/main.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
+</head>
+
+<body onkeypress="javascript:handleKeyPress(event);">
+
+<div id="container">
+
+<div class="page" id="0" style="display: table-cell">
+  <div class="centered">
+    <h1>Welcome to this section!</h1>
+    <br />
+    <a class="special" href="javascript:begin();">Begin</a>
+  </div>
+</div>
+
+{% autoescape false %}
+{{trials}}
+{% endautoescape %}
+
+<div class="page" id="{{final_index}}" style="text-align: center">
+  <div class="centered">
+    <h1>That&rsquo;s all!</h1>
+    <br />
+    <form id="sub_form" method="post" action="{{end_url}}">
+      <input type="hidden" id="response_input" name="responses" value="" />
+      <input type="hidden" id="times_input" name="reaction_times" value="" />
+      <input type="hidden" id="timestamps_input" name="timestamps" value="" />
+      <a class="special" href="#" onclick="submitResponsesAndTimes('sub_form', 'response_input', 'times_input', 'timestamps_input')">Submit</a>
+    </form>
+  </div>
+</div>
+
+</div>
+
+</body>
+
+</html>

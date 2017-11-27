@@ -1,0 +1,40 @@
+<html>
+
+<head>
+  <title>Investigator Console</title>
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <script type="text/javascript">
+    function submitIDForm() {
+      id_input = document.getElementById('subject_id_input');
+      if (id_input.value) {
+        document.getElementById('subject_id_form').submit();
+      } else {
+        alert("You must enter a subject ID.");
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+<div id="container">
+
+<div class="page" style="display: table-cell">
+  <div class="centered">
+    <h1>Investigator Console</h1>
+    <br />
+    <form id="subject_id_form" method="post" action="/">
+      <p>Please enter an identifier for your subject:</p>
+      <input type="text" style="font-size: medium" id="subject_id_input" name="subject_id" value="" />
+      <br />
+      <br />
+      <p><a class="special" href="javascript:submitIDForm()">Begin</a></p>
+    </form>
+  </div>
+</div>
+
+</div>
+
+</body>
+
+</html>

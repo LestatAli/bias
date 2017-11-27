@@ -30,6 +30,21 @@ a.special:hover, a.special:active {
   background-color: #B5A058;
 }
 
+a.long:hover, a.long:active {
+  background-color: #B5A058;
+}
+
+a.long:link, a.long:visited {
+  background-color: #58B572;
+  color: white;
+  text-decoration: none;
+  padding: 10px 30px;
+  font-size: large;
+  display: block;
+  border-color: white;
+  border-radius: 5px;
+}
+
 a:link, a:visited {
   color: black;
   padding: 10px 40px;
