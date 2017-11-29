@@ -8,6 +8,7 @@ from experiment import *
 import json
 import logging
 import hashlib
+from math import sqrt
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -226,38 +227,86 @@ class ResultDownloadHandler(webapp2.RequestHandler):
                 resultsByPhoneme = {};
                 resultsByPhonemeBySUID[subjectID] = resultsByPhoneme;
             if resultsByPhoneme.has_key(phoneme):
-                count = resultsByPhoneme[phoneme];
+                aggResult = resultsByPhoneme[phoneme];
             else:
-                # first item is correct count pre
-                # second is total count pre
-                # third is correct count post
-                # fourth is total count post
-                counts = [0, 0, 0, 0];
+                aggResult = AggregateResult();
             if wordResponse.position == "pre":
-                counts[0] += 1 if wordResponse.isCorrect else 0;
-                counts[1] += 1;
+                aggResult.notePreResponseWithReactionTime(wordResponse.isCorrect, wordResponse.reactionTime);
             elif wordResponse.position == "post":
-                counts[2] += 1 if wordResponse.isCorrect else 0;
-                counts[3] += 1;
+                aggResult.notePostResponseWithReactionTime(wordResponse.isCorrect, wordResponse.reactionTime);
             else:
                 print "Unknown position encountered: " + wordResponse.position;
-            resultsByPhoneme[phoneme] = counts;
+            resultsByPhoneme[phoneme] = aggResult;
 
-        print resultsByPhonemeBySUID;
-
-        csvResults = "suid,phoneme,percent_correct_pre,percent_correct_post\n";
+        csvResults = "suid,phoneme,percent_correct_pre,percent_correct_post,rxn_time_pre,rxn_time_post,rxn_time_sd_pre,rxn_time_sd_post\n";
         for key in resultsByPhonemeBySUID:
             resultsByPhoneme = resultsByPhonemeBySUID[key];
             for phoneme in resultsByPhoneme:
-                results = resultsByPhoneme[phoneme];
-                percent_pre = -1;
-                percent_post = -1;
-                if results[1] > 0:
-                    percent_pre = 100 * results[0] / results[1];
-                if results[3] > 0:
-                    percent_post = 100 * results[2] / results[3];
-                csvResults += ("%s,%s,%d,%d\n" % (key, phoneme, percent_pre, percent_post));
+                aggResults = resultsByPhoneme[phoneme];
+                percent_pre = aggResults.getPercentCorrectPre();
+                percent_post = aggResults.getPercentCorrectPost();
+                times_mean_pre = aggResults.getPreMeanReactionTime();
+                times_mean_post = aggResults.getPostMeanReactionTime();
+                times_sd_pre = aggResults.getPreReactionTimeSD();
+                times_sd_post = aggResults.getPostReactionTimeSD();
+                csvResults += "%s,%s,%d,%d,%d,%d,%d,%d\n"\
+                 % (key, phoneme, percent_pre, percent_post, times_mean_pre, times_mean_post, times_sd_pre, times_sd_post);
         return csvResults;
+
+
+class AggregateResult:
+    def __init__(self):
+        self.preReactionTimes = [];
+        self.postReactionTimes = [];
+        self.preTotalCount = 0;
+        self.preCorrectCount = 0;
+        self.postTotalCount = 0;
+        self.postCorrectCount = 0;
+    def notePreResponseWithReactionTime(self, isCorrect, time):
+        self.preTotalCount += 1;
+        self.preCorrectCount += 1 if isCorrect else 0;
+        self.preReactionTimes.append(float(time));
+    def notePostResponseWithReactionTime(self, isCorrect, time):
+        self.postTotalCount += 1;
+        self.postCorrectCount += 1 if isCorrect else 0;
+        self.postReactionTimes.append(float(time));
+    def getPercentCorrectPre(self):
+        if self.preTotalCount > 0:
+            return (100.0 * self.preCorrectCount) / self.preTotalCount;
+        else:
+            return -1;
+    def getPercentCorrectPost(self):
+        if self.postTotalCount > 0:
+            return (100.0 * self.postCorrectCount) / self.postTotalCount;
+        else:
+            return -1;
+    def getPreMeanReactionTime(self):
+        return getMean(self.preReactionTimes);
+    def getPostMeanReactionTime(self):
+        return getMean(self.postReactionTimes);
+    def getPreReactionTimeSD(self):
+        return getSD(self.preReactionTimes);
+    def getPostReactionTimeSD(self):
+        return getSD(self.postReactionTimes);
+
+
+def getMean(values):
+    if len(values) > 0:
+        return float(sum(values)) / len(values);
+    else:
+        return -1;
+
+
+def getSD(values):
+    if len(values) > 0:
+        mean = float(sum(values)) / len(values);
+        variance = 0;
+        for v in values:
+            variance += pow((v - mean), 2);
+        variance /= len(values);
+        return sqrt(variance);
+    else:
+        return -1;
 
 
 handlerMappings = [
