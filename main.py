@@ -203,17 +203,65 @@ class ResultDownloadHandler(webapp2.RequestHandler):
             self.response.write(template.render({}));
         else:
             csvResults = "";
-            if fileType == 1:
-                csvResults = self.generateCSVResultsForWordsByPhoneme();
-            elif fileType == 2:
-                csvResults = self.generateCSVResultsForWordsByPhoneme();
-            elif fileType == 3:
+            if fileType == "1":
+                csvResults = self.generateCSVResultsForSentencesByPhoneme();
+            elif fileType == "2":
+                csvResults = self.generateCSVResultsForWordByPhoneme();
+            elif fileType == "3":
                 csvResults = self.generateCSVResultsForWordsByPhoneme();
             else:
                 csvResults = self.generateCSVResultsForWordsByPhoneme();
             self.response.headers["Content-Type"] = "text/csv";
             self.response.headers["Content-Disposition"] = "attachment; filename=results.csv";
             self.response.write(csvResults);
+
+    def generateCSVResultsForSentencesByPhoneme(self):
+        resultsByPhonemeBySUID = {};
+        allSentenceResponses = TrialResponse.query(TrialResponse.trialSentenceID != None).fetch();
+        for sentenceResponse in allSentenceResponses:
+            subjectID = sentenceResponse.subjectID;
+            phoneme = sentenceResponse.trialBeginningPhoneme;
+            if resultsByPhonemeBySUID.has_key(subjectID):
+                resultsByCongruencyByPhoneme = resultsByPhonemeBySUID[subjectID];
+            else:
+                resultsByPhoneme = {};
+                resultsByPhonemeBySUID[subjectID] = resultsByPhoneme;
+            if resultsByPhoneme.has_key(phoneme):
+                aggResults = resultsByPhoneme[phoneme];
+            else:
+                congruentResults = AggregateResult();
+                incongruentResults = AggregateResult();
+                aggResults = [incongruentResults, congruentResults];
+
+            index = 0;
+            if sentenceResponse.trialCongruence == "C":
+                index = 1;
+
+            if sentenceResponse.position == "pre":
+                aggResults[index].notePreResponseWithReactionTime(sentenceResponse.isCorrect, sentenceResponse.reactionTime);
+            elif sentenceResponse.position == "post":
+                aggResults[index].notePostResponseWithReactionTime(sentenceResponse.isCorrect, sentenceResponse.reactionTime);
+            else:
+                print "Unknown position encountered: " + sentenceResponse.position;
+            resultsByPhoneme[phoneme] = aggResults;
+
+        csvResults = "suid,phoneme,congruency,percent_correct_pre,percent_correct_post,rxn_time_pre,rxn_time_post,rxn_time_sd_pre,rxn_time_sd_post\n";
+        for key in resultsByPhonemeBySUID:
+            resultsByPhoneme = resultsByPhonemeBySUID[key];
+            for phoneme in resultsByPhoneme:
+                aggResults = resultsByPhoneme[phoneme];
+                for i in [0, 1]:
+                    aggResult = aggResults[i];
+                    percent_pre = aggResult.getPercentCorrectPre();
+                    percent_post = aggResult.getPercentCorrectPost();
+                    times_mean_pre = aggResult.getPreMeanReactionTime();
+                    times_mean_post = aggResult.getPostMeanReactionTime();
+                    times_sd_pre = aggResult.getPreReactionTimeSD();
+                    times_sd_post = aggResult.getPostReactionTimeSD();
+                    congruence = "C" if (i == 1) else "I";
+                    csvResults += "%s,%s,%s,%d,%d,%d,%d,%d,%d\n"\
+                     % (key, phoneme, congruence, percent_pre, percent_post, times_mean_pre, times_mean_post, times_sd_pre, times_sd_post);
+        return csvResults;
 
     def generateCSVResultsForWordsByPhoneme(self):
         resultsByPhonemeBySUID = {};

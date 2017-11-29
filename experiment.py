@@ -3,7 +3,7 @@ import random
 import csv
 
 DEBUG = False;
-SIZE_LIMIT = 3;
+SIZE_LIMIT = 5;
 
 
 class Trial:
