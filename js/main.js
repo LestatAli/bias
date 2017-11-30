@@ -7,7 +7,7 @@ var gTimestamps = [];
 var gCurrentPageID = 0;
 var gCurrentResponseTime = 0;
 var gCurrentTrialStartTime = 0;
-var gIsAcceptingKeyPresses = true;
+var gIsAcceptingKeyPresses = false;
 
 
 function begin() {
@@ -85,8 +85,8 @@ function _advanceToNextWithCompletion(delay, completion) {
 
     setTimeout(function() {
       nextElement.style.display = "table-cell";
-      audio.play();
       audio.addEventListener("ended", completion);
+      audio.play();
     }, delay);
   }
 }

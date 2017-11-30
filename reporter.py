@@ -69,7 +69,7 @@ def generateCSVResultsForSentences(organizerType):
                 times_sd_pre = aggResult.getPreReactionTimeSD();
                 times_sd_post = aggResult.getPostReactionTimeSD();
                 congruence = "C" if (i == 1) else "I";
-                csvResults += "%s,%s,%s,%d,%d,%d,%d,%d,%d\n"\
+                csvResults += "%s,%s,%s,%.1f,%.1f,%d,%d,%d,%d\n"\
                 % (key, organizer, congruence, percent_pre, percent_post, times_mean_pre, times_mean_post, times_sd_pre, times_sd_post);
 
     return csvResults;
@@ -128,7 +128,7 @@ def generateCSVResultsForWords(organizerType):
             times_mean_post = aggResults.getPostMeanReactionTime();
             times_sd_pre = aggResults.getPreReactionTimeSD();
             times_sd_post = aggResults.getPostReactionTimeSD();
-            csvResults += "%s,%s,%d,%d,%d,%d,%d,%d\n"\
+            csvResults += "%s,%s,%.1f,%.1f,%d,%d,%d,%d\n"\
             % (key, organizer, percent_pre, percent_post, times_mean_pre, times_mean_post, times_sd_pre, times_sd_post);
 
     return csvResults;

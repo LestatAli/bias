@@ -97,13 +97,8 @@ class EndPhaseHandler(webapp2.RequestHandler):
         response_times_json = self.request.get("reaction_times");
         timestamps_json = self.request.get("timestamps");
 
-        print "response_json: " + response_json;
         responses = json.loads(response_json);
-
-        print "response_times_json: " + response_times_json;
         response_times = json.loads(response_times_json);
-
-        print "timestamps_json: " + timestamps_json;
         timestamps = json.loads(timestamps_json);
 
         trials = self.getActiveTrialSet().trials;
